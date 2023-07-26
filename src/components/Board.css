@@ -1,0 +1,45 @@
+.white {
+    background: white;
+}
+.black {
+    background: black;
+}
+.board {
+    max-width: 100%;
+    width: fit-content;
+    height: fit-content;
+    border: 2px solid black;
+    background: transparent;
+    display: flex;
+    margin: 0 auto;
+}
+
+.row {
+  display: flex;
+}
+
+.square {
+  width: 50px;
+  padding-bottom: 100%;
+  display: flex;
+  flex: 1;
+}
+@media screen and (max-width: 768px) {
+  .board {
+    max-width: 90%;
+  }
+
+  .square {
+    padding-bottom: 90%;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .board {
+    max-width: 80%;
+  }
+
+  .square {
+    padding-bottom: 80%;
+  }
+}
