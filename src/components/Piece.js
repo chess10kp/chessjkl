@@ -7,6 +7,7 @@ const Piece = ({piece}) => {
         "R":"♖",
         "Q":"♕",
         "P":"♙",
+        "B":"♗",
         "n":"♞",
         "k":"♚",
         "r":"♜",
@@ -17,7 +18,7 @@ const Piece = ({piece}) => {
     if (piece in piecesUnicode){
         return (
             <>
-            <div>{piecesUnicode[piece]}</div>
+            <div className='piece'>{piecesUnicode[piece]}</div>
             </>
         )
     }

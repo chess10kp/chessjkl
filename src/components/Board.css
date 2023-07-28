@@ -1,8 +1,8 @@
 .white {
-    background: white;
+    background: red;
 }
 .black {
-    background: black;
+    background: blue;
 }
 .board {
     max-width: 100%;
@@ -21,8 +21,14 @@
 .square {
   width: 50px;
   padding-bottom: 100%;
-  display: flex;
-  flex: 1;
+  display: grid;
+  place-items: center;
+  position:relative;
+}
+.piece{
+    position: absolute;
+    padding: 0;
+    margin: 0;
 }
 @media screen and (max-width: 768px) {
   .board {

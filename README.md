@@ -1,2 +1,1 @@
-# chessjkl
-Chess, but vim bindings
+This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
