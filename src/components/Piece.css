@@ -1,0 +1,17 @@
+.piece{
+    height : 30px;
+    width: 30px;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    position: absolute;
+    padding: 0;
+    margin: 0;
+}
+
+.piece:hover {
+    cursor : grab;
+}
+.piece:active {
+    cursor: grabbing;
+}

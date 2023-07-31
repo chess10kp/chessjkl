@@ -4,6 +4,9 @@
 .black {
     background: blue;
 }
+.highlight {
+  background: yellow;
+}
 .board {
     max-width: 100%;
     width: fit-content;
@@ -19,16 +22,12 @@
 }
 
 .square {
+  box-sizing: border-box;
   width: 50px;
   padding-bottom: 100%;
   display: grid;
   place-items: center;
   position:relative;
-}
-.piece{
-    position: absolute;
-    padding: 0;
-    margin: 0;
 }
 @media screen and (max-width: 768px) {
   .board {

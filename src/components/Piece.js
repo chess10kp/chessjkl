@@ -1,27 +1,14 @@
 import React from 'react'
+import "./Piece.css"
 
-const Piece = ({piece}) => {
-    const piecesUnicode = {
-        "N": "♘",
-        "K":"♔",
-        "R":"♖",
-        "Q":"♕",
-        "P":"♙",
-        "B":"♗",
-        "n":"♞",
-        "k":"♚",
-        "r":"♜",
-        "q":"♛",
-        "p":"♟︎",
-        "b":"♝",
-    }
-    if (piece in piecesUnicode){
+const Piece = ({piece= null}) => {
+    if (piece){
+        const image = `images/${piece}.png`
+        const pieceClass = piece.toUpperCase() == piece 
         return (
-            <>
-            <div className='piece'>{piecesUnicode[piece]}</div>
-            </>
+            <div className={pieceClass === 1 ? 'white-piece piece' : 'black-piece piece'} style={{backgroundImage: `url(${image})`}}/>
         )
     }
 }
 
-    export default Piece
+export default Piece
