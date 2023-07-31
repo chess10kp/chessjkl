@@ -34,8 +34,8 @@ const Board = () => {
       (e.clientY - boardref.current.getBoundingClientRect().y) / 45,
     );
     if (classList.includes("piece")) {
-      console.log(classList)
-      if (classList.includes("white-piece") && turnToMove == "w" || classList.includes("black-piece" && turnToMove == "b")) {
+      console.log(classList, turnToMove)
+      if (classList.includes("white-piece") && turnToMove == "w" || classList.includes("black-piece") && turnToMove == "b") {
         if (
           activePiece &&
           activePieceSquare[0] == xCoord &&
