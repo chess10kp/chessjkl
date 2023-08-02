@@ -16,14 +16,14 @@ const Board = () => {
     6: "g",
     7: "h",
   };
-  const [chess, setChess] = useState(new Chess());
-  const [board, setBoard] = useState(fenToArr(chess.fen()));
+  const chess = useRef(new Chess())
+  const [board, setBoard] = useState(fenToArr(chess.current.fen()));
   const [highlight, setHighlight] = useState(false);
   const [highlightedSquare, setHighlightedSquare] = useState([]);
   const [activePieceSquare, setActivePieceSquare] = useState(null);
   const [activePiece, setActivePiece] = useState(null);
   const boardref = useRef(null);
-  const turnToMove = chess.turn();
+  const turnToMove = chess.current.turn();
 
   function onPieceClick(e) {
     const classList = e.target.className.split(" ");
@@ -34,7 +34,6 @@ const Board = () => {
       (e.clientY - boardref.current.getBoundingClientRect().y) / 45,
     );
     if (classList.includes("piece")) {
-      console.log(classList, turnToMove)
       if (classList.includes("white-piece") && turnToMove == "w" || classList.includes("black-piece") && turnToMove == "b") {
         if (
           activePiece &&
@@ -57,15 +56,13 @@ const Board = () => {
           activePieceSquare[0],
           activePieceSquare[1],
         );
+        let move;
         try {
-          chess.move({ to: toNotation, from: fromNotation });
+          move = chess.current.move({ to: toNotation, from: fromNotation });
         } catch (error) {
           return;
         }
-        const boardState = board;
-        boardState[yCoord][xCoord] =
-          boardState[activePieceSquare[1]][activePieceSquare[0]];
-        boardState[activePieceSquare[1]][activePieceSquare[0]] = "";
+        const boardState = fenToArr(move.after);
         setBoard(boardState);
         setActivePiece(null);
         setActivePieceSquare(null);
