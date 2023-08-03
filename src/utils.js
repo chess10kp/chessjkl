@@ -1,5 +1,4 @@
 const fenToArr = (fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR") => {
-  console.log(fen)
   const field = fen.split(" ");
   const files = field[0].split("/");
   const arr = Array.from({ length: 8 }, () => Array.from({ length: 8 }, () => ""));
@@ -15,7 +14,6 @@ const fenToArr = (fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR") => {
           }
         }
       }
-      console.log("hi")
       return arr;
     }
 

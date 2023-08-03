@@ -16,7 +16,7 @@ const Board = () => {
     6: "g",
     7: "h",
   };
-  const chess = useRef(new Chess())
+  const chess = useRef(new Chess());
   const [board, setBoard] = useState(fenToArr(chess.current.fen()));
   const [highlight, setHighlight] = useState(false);
   const [highlightedSquare, setHighlightedSquare] = useState([]);
@@ -34,24 +34,52 @@ const Board = () => {
       (e.clientY - boardref.current.getBoundingClientRect().y) / 45,
     );
     if (classList.includes("piece")) {
-      if (classList.includes("white-piece") && turnToMove == "w" || classList.includes("black-piece") && turnToMove == "b") {
+      if (
+        (classList.includes("white-piece") && turnToMove == "w") ||
+        (classList.includes("black-piece") && turnToMove == "b")
+        // if the piece is the same as the color to move, switch highlights
+      ) {
         if (
           activePiece &&
           activePieceSquare[0] == xCoord &&
           activePieceSquare[1] == yCoord
+            // if the same piece is clicked turn off highlight
         ) {
           setHighlightedSquare([]);
           setActivePieceSquare(null);
           setActivePiece(null);
         } else {
+          // else highlight the piece
           setActivePieceSquare([xCoord, yCoord]);
           setActivePiece(board[yCoord][xCoord]);
           setHighlightedSquare([xCoord, yCoord]);
         }
-      }
-    } else {
+      }else { // if piece selected is of opposing color, indicate captures
       if (activePieceSquare) {
-        const toNotation = generateNotation(xCoord, yCoord);
+        const toNotation = generateNotation(xCoord, yCoord); //to coordinate in coordinate form
+        const fromNotation = generateNotation(
+          activePieceSquare[0],
+          activePieceSquare[1],
+        );
+        let move;
+        try {
+          move = chess.current.move({ to: toNotation, from: fromNotation });
+        } catch (error) {
+          return;
+        }
+        const boardState = fenToArr(move.after);
+        setBoard(boardState);
+        setActivePiece(null);
+        setActivePieceSquare(null);
+        setHighlightedSquare([]);
+      }
+      else {
+        return;
+      }
+    }
+    } else { // if piece selected is of opposing color, indicate captures
+      if (activePieceSquare) {
+        const toNotation = generateNotation(xCoord, yCoord); //to coordinate in coordinate form
         const fromNotation = generateNotation(
           activePieceSquare[0],
           activePieceSquare[1],
