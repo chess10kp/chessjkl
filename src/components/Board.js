@@ -120,6 +120,7 @@ const Board = () => {
     }
   }
   function handlePieceClick(e) {
+    setkeyHighlight([]) // remove keyHighlight when using mouse
     const classList = e.target.className.split(" ");
     const xCoord = Math.floor(
       (e.clientX - boardref.current.getBoundingClientRect().x) / 50
@@ -147,6 +148,7 @@ const Board = () => {
           setActivePieceSquare([xCoord, yCoord]);
           setActivePiece(board[yCoord][xCoord]);
           setHighlightedSquare([xCoord, yCoord]);
+          setkeyHighlight([xCoord, yCoord])
         }
       } else {
         // if piece selected is of opposing color, captures
@@ -169,6 +171,7 @@ const Board = () => {
           setHighlightedSquare([]);
           turnToMove.current = turnToMove.current == "w" ? "b" : "w";
         } else {
+          setkeyHighlight([xCoord, yCoord])
           return;
         }
       }
@@ -191,6 +194,10 @@ const Board = () => {
         setActivePiece(null);
         setActivePieceSquare(null);
         setHighlightedSquare([]);
+      }
+      else {
+        setkeyHighlight([xCoord, yCoord])
+        return
       }
     }
   }
