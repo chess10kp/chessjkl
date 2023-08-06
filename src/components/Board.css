@@ -5,7 +5,10 @@
     background: blue;
 }
 .highlight {
-  background: yellow;
+  background: yellow !important;
+}
+.key-highlight {
+  background: black;
 }
 .board {
     max-width: 100%;
