@@ -1,23 +1,22 @@
 .white {
-    background: red;
+    background: rgb(232, 235, 239);
 }
 .black {
-    background: blue;
+    background: rgb(125, 135, 150);
 }
 .highlight {
   background: yellow !important;
 }
 .key-highlight {
-  background: black;
+  background: green;
 }
 .board {
     max-width: 100%;
     width: fit-content;
     height: fit-content;
-    border: 2px solid black;
     background: transparent;
     display: flex;
-    margin: 0 auto;
+    margin: 0 0 0 auto;
 }
 
 .row {
