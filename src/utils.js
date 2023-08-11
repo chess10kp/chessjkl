@@ -38,26 +38,28 @@ const generateNotation = (xCoord, yCoord) => {
 };
 
 const generateCoords = (notation) => {
-  const files = ["a", "b", "c", "d", "e", "f", "g", "h", "i"]
-  if (notation.length == 2) { // the piece is a pawn
-  const xCoord = files.indexOf(notation[0]);
-  return `${xCoord}${ 8- parseInt( notation[1] )  }`
-  }
-  else if (notation.length == 3) { // piece that isnt capturing
+  const files = ["a", "b", "c", "d", "e", "f", "g", "h", "i"];
+  if (notation.length == 2) {
+    // the piece is a pawn
+    const xCoord = files.indexOf(notation[0]);
+    return `${xCoord}${8 - parseInt(notation[1])}`;
+  } else if (
+    notation.length == 3 ||
+    (notation.length == 4 && notation[notation.length - 1] == "+")
+  ) {
+    // piece that isnt capturing or a piece that checks
     const xCoord = files.indexOf(notation[1]);
-    console.log(xCoord)
-    console.log(parseInt( notation[2] ) -1 )
-    console.log( generateNotation(xCoord , 8 - notation[2] ) )
-    return `${xCoord}${8- parseInt( notation[2] )  }`
-  }
-  else if (notation.length == 4) { // piece or pawn capture
+    return `${xCoord}${8 - parseInt(notation[2])}`;
+  } else if (
+    notation.length == 4 ||
+    (notation.length == 5 && notation[notation.length - 1] == "+")
+  ) {
+    // piece or pawn capture
+    console.log(notation)
     const xCoord = files.indexOf(notation[2]);
-    console.log(xCoord)
-    console.log(parseInt( notation[2] ) -1 )
-    console.log( generateNotation(xCoord , 8 - notation[2] ) )
-    return `${xCoord}${8 - parseInt( notation[3] ) + 1 }`
+    return `${xCoord}${8 - parseInt(notation[3]) }`;
   }
-}
+};
 
 module.exports = {
   fenToArr,
