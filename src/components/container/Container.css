@@ -1,0 +1,9 @@
+.container { 
+  display: flex;
+}
+
+.player { 
+  min-height: 50%;
+  background: white;
+}
+

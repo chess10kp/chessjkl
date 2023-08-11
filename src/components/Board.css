@@ -1,6 +1,15 @@
 .white {
     background: rgb(232, 235, 239);
 }
+
+.suggestion-highlight::before { 
+  content: " ";
+  position: absolute;
+  background-color: black;
+  height: 10px;
+  width: 10px;
+}
+
 .black {
     background: rgb(125, 135, 150);
 }
@@ -9,6 +18,9 @@
 }
 .key-highlight {
   background: green;
+}
+.check-highlight {
+  box-shadow: red;
 }
 .board {
     max-width: 100%;

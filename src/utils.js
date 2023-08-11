@@ -2,7 +2,7 @@ const fenToArr = (fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR") => {
   const field = fen.split(" ");
   const files = field[0].split("/");
   const arr = Array.from({ length: 8 }, () =>
-    Array.from({ length: 8 }, () => ""),
+    Array.from({ length: 8 }, () => "")
   );
   let rankIndex;
   for (let i = 0; i < files.length; i++) {
@@ -18,9 +18,11 @@ const fenToArr = (fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR") => {
   }
   return arr;
 };
+
 const isWhite = (piece) => {
   return piece == piece.toUpperCase() ? "w" : "b";
 };
+
 const generateNotation = (xCoord, yCoord) => {
   const files = {
     0: "a",
@@ -34,8 +36,32 @@ const generateNotation = (xCoord, yCoord) => {
   };
   return `${files[xCoord]}${8 - yCoord}`;
 };
+
+const generateCoords = (notation) => {
+  const files = ["a", "b", "c", "d", "e", "f", "g", "h", "i"]
+  if (notation.length == 2) { // the piece is a pawn
+  const xCoord = files.indexOf(notation[0]);
+  return `${xCoord}${ 8- parseInt( notation[1] )  }`
+  }
+  else if (notation.length == 3) { // piece that isnt capturing
+    const xCoord = files.indexOf(notation[1]);
+    console.log(xCoord)
+    console.log(parseInt( notation[2] ) -1 )
+    console.log( generateNotation(xCoord , 8 - notation[2] ) )
+    return `${xCoord}${8- parseInt( notation[2] )  }`
+  }
+  else if (notation.length == 4) { // piece or pawn capture
+    const xCoord = files.indexOf(notation[2]);
+    console.log(xCoord)
+    console.log(parseInt( notation[2] ) -1 )
+    console.log( generateNotation(xCoord , 8 - notation[2] ) )
+    return `${xCoord}${8 - parseInt( notation[3] ) + 1 }`
+  }
+}
+
 module.exports = {
   fenToArr,
   generateNotation,
   isWhite,
+  generateCoords,
 };
