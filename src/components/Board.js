@@ -37,6 +37,38 @@ const Board = () => {
       return newHighlight;
     });
   }
+
+  function movePlayedHandler(move) {
+          turnToMove.current = turnToMove.current == "w" ? "b" : "w";
+    suggestionCoords.current = []
+          const boardState = fenToArr(move.after);
+          setBoard(boardState);
+          setActivePiece(null);
+          setActivePieceSquare(null);
+          setHighlightedSquare([]);
+  }
+  function pieceSelectHandler(xCoord = "", yCoord = "") {
+    if (!xCoord && !yCoord) {
+      suggestionCoords.current = [];
+      setHighlightedSquare([]);
+      setActivePieceSquare(null);
+      setActivePiece(null);
+      return
+    }
+    const fromNotation = generateNotation(xCoord, yCoord);
+    const moves = chess.current.moves({ square: fromNotation });
+    let coords = [];
+    for (let i = 0; i < moves.length; i++) {
+      // loop through list of possible moves and store coordinates in coords
+      const coord = generateCoords(moves[i]);
+      coords.push(coord);
+    }
+    suggestionCoords.current = coords;
+    setActivePieceSquare([xCoord, yCoord]);
+    setActivePiece(board[yCoord][xCoord]);
+    setHighlightedSquare([xCoord, yCoord]);
+  }
+
   function handleKeyDown(e) {
     switch (e.key) {
       case "j":
@@ -59,27 +91,23 @@ const Board = () => {
         const xCoord = keyHighlight[0];
         const pieceSelected = board[keyHighlight[1]][keyHighlight[0]];
         if (pieceSelected) {
-          if (color(pieceSelected) == turnToMove.current) {
+          if (color(pieceSelected) == turnToMove.current) { // color of piece selected is the same as the player's turn
             // toggle highlights
             if (
-              // if the same piece is clicked turn off highlight
+              // if the same piece is selected turn off highlight
               activePiece &&
               activePieceSquare[0] == xCoord &&
               activePieceSquare[1] == yCoord
             ) {
-              setHighlightedSquare([]);
-              setActivePieceSquare(null);
-              setActivePiece(null);
+              pieceSelectHandler()
             } else {
               // else highlight the piece
-              setActivePieceSquare([xCoord, yCoord]);
-              setActivePiece(board[yCoord][xCoord]);
-              setHighlightedSquare([xCoord, yCoord]);
+              pieceSelectHandler(xCoord, yCoord);
             }
           } else {
             // if piece selected is of opposing color, capture
             if (activePieceSquare) {
-              const toNotation = generateNotation(xCoord, yCoord); //to coordinate in coordinate form
+              const toNotation = generateNotation(xCoord, yCoord); 
               const fromNotation = generateNotation(
                 activePieceSquare[0],
                 activePieceSquare[1]
@@ -93,12 +121,7 @@ const Board = () => {
               } catch (error) {
                 return;
               }
-              const boardState = fenToArr(move.after);
-              suggestionCoords.current = []; // no suggestions
-              setBoard(boardState);
-              setActivePiece(null);
-              setActivePieceSquare(null);
-              setHighlightedSquare([]);
+              movePlayedHandler(move)
             } else {
               // clicking opposing piece without a piece selected
               return;
@@ -118,12 +141,7 @@ const Board = () => {
             } catch (error) {
               return;
             }
-            const boardState = fenToArr(move.after);
-            setBoard(boardState);
-            turnToMove.current = turnToMove.current == "w" ? "b" : "w";
-            setActivePiece(null);
-            setActivePieceSquare(null);
-            setHighlightedSquare([]);
+            movePlayedHandler(move)
           }
         }
         break;
@@ -153,27 +171,10 @@ const Board = () => {
           activePieceSquare[0] == xCoord &&
           activePieceSquare[1] == yCoord
         ) {
-          suggestionCoords.current = []; // no suggestions
-          setHighlightedSquare([]);
-          setActivePieceSquare(null);
-          setActivePiece(null);
+          pieceSelectHandler()
         } else {
           // else highlight the piece and show suggestions
-          const fromNotation = generateNotation(xCoord, yCoord);
-          const moves = chess.current.moves({ square: fromNotation });
-          let coords = [];
-          for (let i = 0; i < moves.length; i++) {
-            // loop through list of possible moves and store coordinates in coords
-            const coord = generateCoords(moves[i]);
-            coords.push(coord);
-          }
-          // assign the ref variable since the board rerenders on pieceClick
-          suggestionCoords.current = coords;
-          console.log(suggestionCoords.current)
-          setActivePieceSquare([xCoord, yCoord]);
-          setActivePiece(board[yCoord][xCoord]);
-          setHighlightedSquare([xCoord, yCoord]);
-          setkeyHighlight([xCoord, yCoord]);
+          pieceSelectHandler(xCoord,yCoord)
         }
       } else {
         // if piece selected is of opposing color, captures
@@ -189,12 +190,7 @@ const Board = () => {
           } catch (error) {
             return;
           }
-          const boardState = fenToArr(move.after);
-          setBoard(boardState);
-          setActivePiece(null);
-          setActivePieceSquare(null);
-          setHighlightedSquare([]);
-          turnToMove.current = turnToMove.current == "w" ? "b" : "w";
+          movePlayedHandler(move)
         } else {
           // if only an oppoenent piece is selectd
           setkeyHighlight([xCoord, yCoord]);
@@ -215,61 +211,13 @@ const Board = () => {
         } catch (error) {
           return;
         }
-        const boardState = fenToArr(move.after);
-        setBoard(boardState);
-        turnToMove.current = turnToMove.current == "w" ? "b" : "w";
-        suggestionCoords.current = [];
-        setActivePiece(null);
-        setActivePieceSquare(null);
-        setHighlightedSquare([]);
+        movePlayedHandler(move)
       } else {
         setkeyHighlight([xCoord, yCoord]);
         return;
       }
     }
   }
-  const BoardPlayer = (props) => {
-    return (
-      <div className="player-display">
-        {/* <Timer initialMinute={4} initialSecond={0}></Timer> */}
-        {props.player}
-      </div>
-    );
-  };
-
-  const Timer = (props) => {
-    const { initialMinute = 0, initialSecond = 0 } = props;
-    const [minutes, setMinutes] = useState(initialMinute);
-    const [seconds, setSeconds] = useState(initialSecond);
-    useEffect(() => {
-      let myInterval = setInterval(() => {
-        if (seconds > 0) {
-          setSeconds(seconds - 1);
-        }
-        if (seconds == 0) {
-          if (minutes == 0) {
-            clearInterval(myInterval);
-          } else {
-            setMinutes(minutes - 1);
-            setSeconds(59);
-          }
-        }
-      }, 1000);
-      return () => {
-        clearInterval(myInterval);
-      };
-    });
-    return (
-      <div>
-        {minutes == 0 && seconds == 0 ? null : (
-          <h1>
-            {" "}
-            {minutes}:{seconds < 10 ? `0${seconds}` : seconds}{" "}
-          </h1>
-        )}
-      </div>
-    );
-  };
   return (
     <div>
       <div

@@ -13,18 +13,19 @@ if &shortmess =~ 'A'
 else
   set shortmess=aoO
 endif
-badd +1 src/components/Board.js
+badd +178 src/components/Board.js
 argglobal
 %argdel
 $argadd src/components/Board.js
 edit src/components/Board.js
 argglobal
-let s:l = 1 - ((0 * winheight(0) + 17) / 35)
+balt src/components/ui/Player.js
+let s:l = 178 - ((21 * winheight(0) + 15) / 30)
 if s:l < 1 | let s:l = 1 | endif
 keepjumps exe s:l
 normal! zt
-keepjumps 1
-normal! 0
+keepjumps 178
+normal! 046|
 tabnext 1
 if exists('s:wipebuf') && len(win_findbuf(s:wipebuf)) == 0 && getbufvar(s:wipebuf, '&buftype') isnot# 'terminal'
   silent exe 'bwipe ' . s:wipebuf
