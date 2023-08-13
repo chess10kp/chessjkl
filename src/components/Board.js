@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import "./Board.css";
 import Square from "./Square.js";
-import BoardPlayer from "./ui/Player"
+import BoardPlayer from "./ui/Player";
 import {
   isWhite as color,
   fenToArr,
@@ -14,26 +14,48 @@ import { Chess } from "chess.js";
 const Board = () => {
   const chess = useRef(new Chess());
   const [board, setBoard] = useState(fenToArr(chess.current.fen()));
-  const [keyHighlight, setkeyHighlight] = useState([5, 5]);
+  const [keyHighlight, setkeyHighlight] = useState([4, 7]);
   const [highlightedSquare, setHighlightedSquare] = useState([]);
   const [activePieceSquare, setActivePieceSquare] = useState(null);
   const [activePiece, setActivePiece] = useState(null);
   const boardref = useRef(null);
   const turnToMove = useRef("w");
-  const keyStack = useRef(1); 
+  const keyStack = useRef(1);
   const inCheck = useRef(false);
+  const gameHasStarted = useRef(false);
+  const gameHasEnded = useRef(false);
+  const gameResult = useRef("");
   const suggestionCoords = useRef([]);
-  document.addEventListener('keydown', function (el) {
+  document.addEventListener("keydown", function (el) {
     if (el.key == "Enter" && el.ctrlKey) {
-      boardref.current.focus()
+      gameHasStarted.current = true;
+      boardref.current.focus();
     }
-  })
-    
+  });
 
   useEffect(() => {
     inCheck.current = chess.current.inCheck();
     return () => {};
   }, [board]);
+
+  useEffect(() => {
+    if (chess.current.isGameOver()) {
+      if (chess.current.isCheckmate()) {
+        gameHasEnded.current = true;
+        gameResult.current = `${turnToMove == "w" ? "white" : "black "} wins`;
+      }
+      if (
+        chess.current.isDraw() ||
+        chess.current.isInsufficientMaterial() ||
+        chess.current.isStalemate()
+      ) {
+        gameHasEnded.current = true;
+        gameResult.current = `Draw`;
+      }
+    }
+
+    return () => {};
+  }, [turnToMove]);
 
   function updateHighlight(index, value) {
     setkeyHighlight((previousHighlight) => {
@@ -43,17 +65,17 @@ const Board = () => {
       newHighlight[index] = newHighlight[index] > 7 ? 7 : newHighlight[index];
       return newHighlight;
     });
-    keyStack.current = 1
+    keyStack.current = 1;
   }
 
   function movePlayedHandler(move) {
-          turnToMove.current = turnToMove.current == "w" ? "b" : "w";
-    suggestionCoords.current = []
-          const boardState = fenToArr(move.after);
-          setBoard(boardState);
-          setActivePiece(null);
-          setActivePieceSquare(null);
-          setHighlightedSquare([]);
+    turnToMove.current = turnToMove.current == "w" ? "b" : "w";
+    suggestionCoords.current = [];
+    const boardState = fenToArr(move.after);
+    setBoard(boardState);
+    setActivePiece(null);
+    setActivePieceSquare(null);
+    setHighlightedSquare([]);
   }
   function pieceSelectHandler(xCoord = "", yCoord = "") {
     if (!xCoord && !yCoord) {
@@ -61,7 +83,7 @@ const Board = () => {
       setHighlightedSquare([]);
       setActivePieceSquare(null);
       setActivePiece(null);
-      return
+      return;
     }
     const fromNotation = generateNotation(xCoord, yCoord);
     const moves = chess.current.moves({ square: fromNotation });
@@ -75,21 +97,26 @@ const Board = () => {
     setActivePieceSquare([xCoord, yCoord]);
     setActivePiece(board[yCoord][xCoord]);
     setHighlightedSquare([xCoord, yCoord]);
+    setkeyHighlight([xCoord, yCoord]);
   }
 
   function handleKeyDown(e) {
     switch (e.key) {
       case "j":
-        updateHighlight(1, 1*(parseInt(keyStack.current)));
+      case "ArrowDown":
+        updateHighlight(1, 1 * parseInt(keyStack.current));
         break;
       case "k":
-        updateHighlight(1, -1*(parseInt(keyStack.current)));
+      case "ArrowUp":
+        updateHighlight(1, -1 * parseInt(keyStack.current));
         break;
       case "l":
-        updateHighlight(0, 1*(parseInt(keyStack.current)));
+      case "ArrowRight":
+        updateHighlight(0, 1 * parseInt(keyStack.current));
         break;
       case "h":
-        updateHighlight(0, -1*(parseInt(keyStack.current)));
+      case "ArrowLeft":
+        updateHighlight(0, -1 * parseInt(keyStack.current));
         break;
       case "1":
         keyStack.current = 1;
@@ -119,14 +146,15 @@ const Board = () => {
         keyStack.current = 9;
         break;
       case "Enter":
-        if (document.activeElement != boardref.current) {
+        if (document.activeElement != boardref.current || e.ctrlKey) {
           return;
         }
         const yCoord = keyHighlight[1];
         const xCoord = keyHighlight[0];
         const pieceSelected = board[keyHighlight[1]][keyHighlight[0]];
         if (pieceSelected) {
-          if (color(pieceSelected) == turnToMove.current) { // color of piece selected is the same as the player's turn
+          if (color(pieceSelected) == turnToMove.current) {
+            // color of piece selected is the same as the player's turn
             // toggle highlights
             if (
               // if the same piece is selected turn off highlight
@@ -134,7 +162,7 @@ const Board = () => {
               activePieceSquare[0] == xCoord &&
               activePieceSquare[1] == yCoord
             ) {
-              pieceSelectHandler()
+              pieceSelectHandler();
             } else {
               // else highlight the piece
               pieceSelectHandler(xCoord, yCoord);
@@ -142,7 +170,7 @@ const Board = () => {
           } else {
             // if piece selected is of opposing color, capture
             if (activePieceSquare) {
-              const toNotation = generateNotation(xCoord, yCoord); 
+              const toNotation = generateNotation(xCoord, yCoord);
               const fromNotation = generateNotation(
                 activePieceSquare[0],
                 activePieceSquare[1]
@@ -156,7 +184,7 @@ const Board = () => {
               } catch (error) {
                 return;
               }
-              movePlayedHandler(move)
+              movePlayedHandler(move);
             } else {
               // clicking opposing piece without a piece selected
               return;
@@ -176,7 +204,7 @@ const Board = () => {
             } catch (error) {
               return;
             }
-            movePlayedHandler(move)
+            movePlayedHandler(move);
           }
         }
         break;
@@ -206,10 +234,10 @@ const Board = () => {
           activePieceSquare[0] == xCoord &&
           activePieceSquare[1] == yCoord
         ) {
-          pieceSelectHandler()
+          pieceSelectHandler();
         } else {
           // else highlight the piece and show suggestions
-          pieceSelectHandler(xCoord,yCoord)
+          pieceSelectHandler(xCoord, yCoord);
         }
       } else {
         // if piece selected is of opposing color, captures
@@ -225,7 +253,7 @@ const Board = () => {
           } catch (error) {
             return;
           }
-          movePlayedHandler(move)
+          movePlayedHandler(move);
         } else {
           // if only an oppoenent piece is selectd
           setkeyHighlight([xCoord, yCoord]);
@@ -242,11 +270,11 @@ const Board = () => {
         );
         let move;
         try {
-         move = chess.current.move({ to: toNotation, from: fromNotation });
+          move = chess.current.move({ to: toNotation, from: fromNotation });
         } catch (error) {
           return;
         }
-        movePlayedHandler(move)
+        movePlayedHandler(move);
       } else {
         setkeyHighlight([xCoord, yCoord]);
         return;
@@ -255,7 +283,7 @@ const Board = () => {
   }
   return (
     <div>
-      <BoardPlayer turnToMove={turnToMove} player="black"/>
+      <BoardPlayer turnToMove={turnToMove} player="black" gameHasStarted={gameHasStarted.current} gameHasEnded={gameHasEnded.current} />
       <div
         ref={boardref}
         className="board"
@@ -282,7 +310,7 @@ const Board = () => {
           </div>
         ))}
       </div>
-      <BoardPlayer turnToMove={turnToMove} player="white"/>
+      <BoardPlayer turnToMove={turnToMove} player="white" gameHasStarted={gameHasStarted.current} gameHasEnded={gameHasEnded.current} />
     </div>
   );
 };

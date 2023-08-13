@@ -30,7 +30,7 @@
 .check-highlight {
   box-shadow: red;
 }
-.board {
+#board {
     max-width: 100%;
     width: fit-content;
     height: fit-content;

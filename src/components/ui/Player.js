@@ -3,12 +3,12 @@ import { useState, useEffect  } from "react";
 import "../container/Container.css"
 import "./Player.css"
 
-function BoardPlayer({player, turnToMove}) {
+function BoardPlayer({player, turnToMove, gameHasStarted, gameHasEnded}) {
   const isTurnToMove = (player[0] == turnToMove.current.toLowerCase())
   return (
     <>
     <div id={player == "white" ? "player-info-white" : "player-info-black"} className={isTurnToMove ? "active-player" : "inactive-player"}>
-        <Timer initialMinute={2} initialSecond={0} clockPlay={isTurnToMove}></Timer>
+        <Timer initialMinute={2} initialSecond={0} clockPlay={isTurnToMove} gameHasEnded={gameHasEnded} gameHasStarted={gameHasStarted}></Timer>
       </div>
     </>
   )
@@ -19,7 +19,7 @@ const Timer = (props) => {
     const [minutes, setMinutes] = useState(initialMinute);
     const [seconds, setSeconds] = useState(initialSecond);
     useEffect(() => {
-  if (!clockPlay) {
+  if (!clockPlay || !props.gameHasStarted || props.gameHasEnded) {
     return
   }
       let myInterval = setInterval(() => {
@@ -41,7 +41,7 @@ const Timer = (props) => {
     });
     return (
       <div>
-        {minutes == 0 && seconds == 0 ? null : (
+        {minutes == 0 && seconds == 0 ? `0:00` : (
           <h1>
             {" "}
             {minutes}:{seconds < 10 ? `0${seconds}` : seconds}{" "}

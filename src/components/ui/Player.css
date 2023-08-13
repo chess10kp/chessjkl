@@ -11,12 +11,14 @@
   color: black;
   background: white;
   width: 40%;
-  min-height: 10%;
+  margin: 0;
+  padding: 0;
 }
 
 #player-info-black {
   color: white;
   background: black;
   width: 40%;
-  min-height: 10%;
+  margin: 0;
+  padding: 0;
 }
