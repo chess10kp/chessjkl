@@ -283,7 +283,12 @@ const Board = () => {
   }
   return (
     <div>
-      <BoardPlayer turnToMove={turnToMove} player="black" gameHasStarted={gameHasStarted.current} gameHasEnded={gameHasEnded.current} />
+      <BoardPlayer
+        turnToMove={turnToMove}
+        player="black"
+        gameHasStarted={gameHasStarted.current}
+        gameHasEnded={gameHasEnded.current}
+      />
       <div
         ref={boardref}
         className="board"
@@ -310,7 +315,12 @@ const Board = () => {
           </div>
         ))}
       </div>
-      <BoardPlayer turnToMove={turnToMove} player="white" gameHasStarted={gameHasStarted.current} gameHasEnded={gameHasEnded.current} />
+      <BoardPlayer
+        turnToMove={turnToMove}
+        player="white"
+        gameHasStarted={gameHasStarted.current}
+        gameHasEnded={gameHasEnded.current}
+      />
     </div>
   );
 };
