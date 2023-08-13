@@ -1,0 +1,22 @@
+
+.active-player {
+  opacity: 1;
+}
+
+.inactive-player {
+  opacity: 0.6;
+}
+
+#player-info-white { 
+  color: black;
+  background: white;
+  width: 40%;
+  min-height: 10%;
+}
+
+#player-info-black {
+  color: white;
+  background: black;
+  width: 40%;
+  min-height: 10%;
+}

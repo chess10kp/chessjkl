@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import "./Board.css";
 import Square from "./Square.js";
+import BoardPlayer from "./ui/Player"
 import {
   isWhite as color,
   fenToArr,
@@ -19,9 +20,15 @@ const Board = () => {
   const [activePiece, setActivePiece] = useState(null);
   const boardref = useRef(null);
   const turnToMove = useRef("w");
-  const keyStack = useRef([]); // stack to store number prefixes
+  const keyStack = useRef(1); 
   const inCheck = useRef(false);
   const suggestionCoords = useRef([]);
+  document.addEventListener('keydown', function (el) {
+    if (el.key == "Enter" && el.ctrlKey) {
+      boardref.current.focus()
+    }
+  })
+    
 
   useEffect(() => {
     inCheck.current = chess.current.inCheck();
@@ -36,6 +43,7 @@ const Board = () => {
       newHighlight[index] = newHighlight[index] > 7 ? 7 : newHighlight[index];
       return newHighlight;
     });
+    keyStack.current = 1
   }
 
   function movePlayedHandler(move) {
@@ -72,21 +80,51 @@ const Board = () => {
   function handleKeyDown(e) {
     switch (e.key) {
       case "j":
-        updateHighlight(1, 1);
+        updateHighlight(1, 1*(parseInt(keyStack.current)));
         break;
       case "k":
-        updateHighlight(1, -1);
+        updateHighlight(1, -1*(parseInt(keyStack.current)));
         break;
       case "l":
-        updateHighlight(0, 1);
+        updateHighlight(0, 1*(parseInt(keyStack.current)));
         break;
       case "h":
-        updateHighlight(0, -1);
+        updateHighlight(0, -1*(parseInt(keyStack.current)));
         break;
       case "1":
-        keyStack.current.append(1);
+        keyStack.current = 1;
+        break;
+      case "2":
+        keyStack.current = 2;
+        break;
+      case "3":
+        keyStack.current = 3;
+        break;
+      case "4":
+        keyStack.current = 4;
+        break;
+      case "5":
+        keyStack.current = 5;
+        break;
+      case "6":
+        keyStack.current = 6;
+        break;
+      case "7":
+        keyStack.current = 7;
+        break;
+      case "8":
+        keyStack.current = 8;
+        break;
+      case "9":
+        keyStack.current = 9;
         break;
       case "Enter":
+        if (document.activeElement == boardref.current) {
+          console.log("hi")
+        }
+        else {
+          console.log(document.activeElement)
+        }
         const yCoord = keyHighlight[1];
         const xCoord = keyHighlight[0];
         const pieceSelected = board[keyHighlight[1]][keyHighlight[0]];
@@ -207,7 +245,7 @@ const Board = () => {
         );
         let move;
         try {
-          move = chess.current.move({ to: toNotation, from: fromNotation });
+         move = chess.current.move({ to: toNotation, from: fromNotation });
         } catch (error) {
           return;
         }
@@ -220,9 +258,11 @@ const Board = () => {
   }
   return (
     <div>
+      <BoardPlayer turnToMove={turnToMove} player="black"/>
       <div
         ref={boardref}
         className="board"
+        id="board"
         tabIndex={0}
         onKeyDown={handleKeyDown}
         onMouseDown={handlePieceClick}
@@ -245,6 +285,7 @@ const Board = () => {
           </div>
         ))}
       </div>
+      <BoardPlayer turnToMove={turnToMove} player="white"/>
     </div>
   );
 };

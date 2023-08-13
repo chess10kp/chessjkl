@@ -55,7 +55,6 @@ const generateCoords = (notation) => {
     (notation.length == 5 && notation[notation.length - 1] == "+")
   ) {
     // piece or pawn capture
-    console.log(notation)
     const xCoord = files.indexOf(notation[2]);
     return `${xCoord}${8 - parseInt(notation[3]) }`;
   }

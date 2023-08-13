@@ -1,30 +1,27 @@
 import React from "react";
 import { useState, useEffect  } from "react";
 import "../container/Container.css"
+import "./Player.css"
 
-const PlayerSideBar = (props) => {
-  return(
-  <div>
-    {props.player}
-    </div>
-  )
-
-};
-
-  const BoardPlayer = (props) => {
-    return (
-      <div className="player-display">
-        {/* <Timer initialMinute={4} initialSecond={0}></Timer> */}
-        {props.player}
+function BoardPlayer({player, turnToMove}) {
+  const isTurnToMove = (player[0] == turnToMove.current.toLowerCase())
+  return (
+    <>
+    <div id={player == "white" ? "player-info-white" : "player-info-black"} className={isTurnToMove ? "active-player" : "inactive-player"}>
+        <Timer initialMinute={2} initialSecond={0} clockPlay={isTurnToMove}></Timer>
       </div>
-    );
-  };
+    </>
+  )
+}
 
-  const Timer = (props) => {
-    const { initialMinute = 0, initialSecond = 0 } = props;
+const Timer = (props) => {
+    const { initialMinute = 0, initialSecond = 0, clockPlay = false } = props;
     const [minutes, setMinutes] = useState(initialMinute);
     const [seconds, setSeconds] = useState(initialSecond);
     useEffect(() => {
+  if (!clockPlay) {
+    return
+  }
       let myInterval = setInterval(() => {
         if (seconds > 0) {
           setSeconds(seconds - 1);
@@ -54,4 +51,5 @@ const PlayerSideBar = (props) => {
     );
   };
 
-export default PlayerSideBar;
+
+export default BoardPlayer;
