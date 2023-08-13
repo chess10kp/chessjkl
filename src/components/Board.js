@@ -119,11 +119,8 @@ const Board = () => {
         keyStack.current = 9;
         break;
       case "Enter":
-        if (document.activeElement == boardref.current) {
-          console.log("hi")
-        }
-        else {
-          console.log(document.activeElement)
+        if (document.activeElement != boardref.current) {
+          return;
         }
         const yCoord = keyHighlight[1];
         const xCoord = keyHighlight[0];
