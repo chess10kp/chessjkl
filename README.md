@@ -1,11 +1,11 @@
 # Chessjkl 
 
-Chessjkl is a web-based chessboard application built using ReactJS that enables users to play chess with a unique twist—keyboard movement using the 'j', 'k', and 'l' keys to navigate and control the movement of chess pieces. This project aims to provide an alternative and more accessible way of interacting with a chessboard.
+Chessjkl is a web-based chessboard component for React with a keyboard driven control scheme. This project aims to provide an alternative and more accessible way of interacting with a virtual chessboard.
 ## Features
 
-- Play chess using the vim keys, ( 'h',  'j', 'k', and 'l' ) or arrow keys for movement.
+- Play chess using the arrow keys for movement.
 - Visual cues for piece selection and movement using keyboard.
-- Highlights valid moves based on the selected piece.
+- Highlights legal moves.
 
 ## Installation
 
